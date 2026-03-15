@@ -8,6 +8,7 @@ import { authorizeRole } from "../../middlewares/auth.middleware.ts";
 import { Role } from "@prisma/client";
 import { validate } from "../../middlewares/validate.middleware.ts";
 import { productSchema } from "../../shema/productSchema.ts";
+import { upload } from "../../middlewares/upload.middleware.ts";
 
 export const ProductRouter: Router = Router();
 
@@ -26,6 +27,7 @@ ProductRouter.get(
 ProductRouter.post(
   "/create",
   authorizeRole([Role.ADMIN]),
+  upload.single('image'),
   validate(productSchema),
   createProductController,
 );

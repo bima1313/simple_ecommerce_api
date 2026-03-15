@@ -7,8 +7,9 @@ export const productSchema = z
       .trim()
       .min(4, "Name must be at least 4 characters")
       .max(100, "Name must be at most 100 characters."),
-    price: z
+    price: z.coerce
       .number()
+      .positive()
       .min(1000, "Minimun price is 1.000 Rupiah")
       .max(50000000, "Maxsimum price is 50.000.000 Rupiah"),
     description: z
@@ -16,7 +17,7 @@ export const productSchema = z
       .min(4, "Name must be at least 4 characters")
       .max(100, "Name must be at most 100 characters.")
       .optional(),
-    stock: z.number().min(1, "Stock must be at least 1 item"),
+    stock: z.coerce.number().int().min(1, "Stock must be at least 1 item"),
     category: z
       .string()
       .trim()

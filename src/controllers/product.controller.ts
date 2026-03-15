@@ -2,6 +2,7 @@ import { type Product } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
 import type { productSchema } from "../shema/productSchema.ts";
 import { prisma } from "../utils/prisma.ts";
+import { uploadImage } from "../utils/uploadImage.ts";
 
 export const getProductsController = async (
   req: Request,
@@ -61,12 +62,20 @@ export const createProductController = async (
 ) => {
   try {
     const data: productSchema = req.body;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: "Product image must be upload" });
+    }    
+    const publicUrl: string = await uploadImage(file);
+    
     const product = await prisma.product.create({
       data: {
         name: data.name,
-        price: data.price,
+        price: Number(data.price),
         description: data.description || null,
-        stock: data.stock,
+        stock: Number(data.stock),
+        imageUrl: publicUrl,
         category: {
           connectOrCreate: {
             where: {
@@ -80,7 +89,9 @@ export const createProductController = async (
         },
       },
     });
-    return res.status(200).json({ data: product });
+    return res
+      .status(200)
+      .json({ message: "Create product success", data: product });
   } catch (error) {
     next(error);
   }
