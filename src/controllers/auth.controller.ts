@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import type { LoginSchema } from "../shema/loginSchema.ts";
 import type { RegisterSchema } from "../shema/registerSchema.ts";
-import { hashPassword } from "../utils/bcryptPass.ts";
+import { comparePassword, hashPassword } from "../utils/bcryptPass.ts";
 
 export const loginController = async (
   req: Request,
@@ -15,8 +15,14 @@ export const loginController = async (
     const data: LoginSchema = req.body;
     const user = await prisma.user.findFirst({ where: { email: data.email } });
     if (!user) {
-      res.status(401).send({ message: "Email and Password was wrong" });
+      return res.status(401).send({ message: "Email and Password was wrong" });
     } else {
+      const isPasswordValid = await comparePassword(data.password, user.password);
+      if (!isPasswordValid) {
+        return res
+          .status(401)
+          .send({ message: "Email and Password was wrong" });
+      }
       const payload = {
         id: user.id,
         name: user.name,
