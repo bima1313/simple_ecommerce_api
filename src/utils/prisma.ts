@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { configuration } from '../config/config.ts';
+import { configuration } from '../config/config.js';
 
 // Save instance Prisma as object global
 const globalForPrisma = global as unknown as { prisma: PrismaClient };

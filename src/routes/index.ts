@@ -1,9 +1,9 @@
 import { Router } from "express";
-import customerRoute from "./customer/index.ts";
-import { AuthRouter } from "./auth.routes.ts";
-import { HealthRouter } from "./health.routes.ts";
-import adminRoute from "./admin/index.ts";
-import { RefreshRoute } from "./refresh.routes.ts";
+import customerRoute from "./customer/index.js";
+import { AuthRouter } from "./auth.routes.js";
+import { HealthRouter } from "./health.routes.js";
+import adminRoute from "./admin/index.js";
+import { RefreshRoute } from "./refresh.routes.js";
 
 const registerRoutes: Router = Router();
 

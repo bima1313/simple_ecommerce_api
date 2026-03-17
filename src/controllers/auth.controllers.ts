@@ -1,10 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import type { LoginSchema } from "../shema/loginSchema.ts";
-import type { RegisterSchema } from "../shema/registerSchema.ts";
-import { comparePassword, hashPassword } from "../utils/bcryptPass.ts";
-import { prisma } from "../utils/prisma.ts";
-import { configuration } from "../config/config.ts";
+import type { LoginSchema } from "../shema/loginSchema.js";
+import type { RegisterSchema } from "../shema/registerSchema.js";
+import { comparePassword, hashPassword } from "../utils/bcryptPass.js";
+import { prisma } from "../utils/prisma.js";
+import { configuration } from "../config/config.js";
 
 export const loginController = async (
   req: Request,

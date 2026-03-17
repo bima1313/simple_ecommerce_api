@@ -1,11 +1,11 @@
 import express, { type Application } from "express";
 import cors from "cors";
-import registerRoutes from "./routes/index.ts";
+import registerRoutes from "./routes/index.js";
 import {
   errorMiddleware,
   notFoundHandler,
-} from "./middlewares/error.middlewares.ts";
-import { configuration } from "./config/config.ts";
+} from "./middlewares/error.middlewares.js";
+import { configuration } from "./config/config.js";
 
 const app: Application = express();
 
@@ -22,8 +22,11 @@ app.use(notFoundHandler);
 // ERROR MIDDLEWARE
 app.use(errorMiddleware);
 
-const PORT = configuration.port;
+if (process.env.NODE_ENV !== "production") {
+  const PORT = configuration.port;
+  app.listen(PORT, () => {
+    console.log(`Server jalan di http://localhost:${PORT}`);
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`Server E-Commerce berjalan di http://localhost:${PORT}`);
-});
+export default app;

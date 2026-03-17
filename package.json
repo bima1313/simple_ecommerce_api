@@ -4,7 +4,8 @@
   "main": "app.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/app.ts"
+    "dev": "tsx watch src/app.ts",
+    "postinstall": "prisma generate"
   },
   "author": "bima1313",
   "license": "ISC",

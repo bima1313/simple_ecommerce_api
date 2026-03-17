@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { configuration } from "../config/config.ts";
+import { configuration } from "../config/config.js";
 
 // Handler only status 404
 export const notFoundHandler = (

@@ -1,9 +1,9 @@
 import { Prisma, type Product } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
-import type { productSchema } from "../shema/productSchema.ts";
-import { prisma } from "../utils/prisma.ts";
-import { uploadImage } from "../utils/uploadImage.ts";
-import { supabase } from "../utils/supabase.ts";
+import type { productSchema } from "../shema/productSchema.js";
+import { prisma } from "../utils/prisma.js";
+import { uploadImage } from "../utils/uploadImage.js";
+import { supabase } from "../utils/supabase.js";
 
 export const getProductsController = async (
   req: Request,

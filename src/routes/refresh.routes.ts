@@ -4,9 +4,9 @@ import {
   type Request,
   type Response,
 } from "express";
-import { prisma } from "../utils/prisma.ts";
+import { prisma } from "../utils/prisma.js";
 import jwt from "jsonwebtoken";
-import { configuration } from "../config/config.ts";
+import { configuration } from "../config/config.js";
 
 export const RefreshRoute: Router = Router();
 
