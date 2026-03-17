@@ -4,7 +4,7 @@ import registerRoutes from "./routes/index.ts";
 import {
   errorMiddleware,
   notFoundHandler,
-} from "./middlewares/error.midleware.ts";
+} from "./middlewares/error.middlewares.ts";
 import { configuration } from "./config/config.ts";
 
 const app: Application = express();

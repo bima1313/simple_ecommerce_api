@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { validate } from "../middlewares/validate.middleware.ts";
+import { validate } from "../middlewares/validate.middlewares.ts";
 import { LoginSchema } from "../shema/loginSchema.ts";
 import {
   loginController,
   registerController,
-} from "../controllers/auth.controller.ts";
+} from "../controllers/auth.controllers.ts";
 import { RegisterSchema } from "../shema/registerSchema.ts";
 
 export const AuthRouter: Router = Router();

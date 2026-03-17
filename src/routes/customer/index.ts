@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { routeConfigs } from "./config.ts";
-import { verifyToken } from "../../middlewares/auth.middleware.ts";
+import { verifyToken } from "../../middlewares/auth.middlewares.ts";
 
 const customerRoute: Router = Router();
 

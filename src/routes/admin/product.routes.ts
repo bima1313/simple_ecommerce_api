@@ -5,15 +5,15 @@ import {
   getProductController,
   getProductsController,
   updateProductController,
-} from "../../controllers/product.controller.ts";
-import { authorizeRole } from "../../middlewares/auth.middleware.ts";
+} from "../../controllers/product.controllers.ts";
+import { authorizeRole } from "../../middlewares/auth.middlewares.ts";
 import { Role } from "@prisma/client";
-import { validate } from "../../middlewares/validate.middleware.ts";
+import { validate } from "../../middlewares/validate.middlewares.ts";
 import {
   patchProductSchema,
   productSchema,
 } from "../../shema/productSchema.ts";
-import { upload } from "../../middlewares/upload.middleware.ts";
+import { upload } from "../../middlewares/upload.middlewares.ts";
 
 export const ProductRouter: Router = Router();
 
