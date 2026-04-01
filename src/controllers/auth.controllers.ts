@@ -5,23 +5,25 @@ import type { RegisterSchema } from "../shema/registerSchema.js";
 import { comparePassword, hashPassword } from "../utils/bcryptPass.js";
 import { prisma } from "../utils/prisma.js";
 import { configuration } from "../config/config.js";
+import { AppError } from "../utils/appError.js";
+import { catchAsync } from "../utils/catchAsync.js";
 
-export const loginController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const loginController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const data: LoginSchema = req.body;
     const user = await prisma.user.findUnique({ where: { email: data.email } });
     if (!user) {
-      return res.status(401).json({ message: "Email and Password was wrong" });
+      throw new AppError({
+        statusCode: 401,
+        message: "Email and Password was wrong",
+      });
     } else {
       if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
         const remainingTime = Math.ceil(
           (user.lockUntil.getTime() - Date.now()) / 60000,
         );
-        return res.status(403).json({
+        throw new AppError({
+          statusCode: 403,
           message: `Please try again in ${remainingTime} minutes.`,
         });
       }
@@ -45,9 +47,10 @@ export const loginController = async (
             lockUntil: lockUntil,
           },
         });
-        return res
-          .status(401)
-          .json({ message: "Email and Password was wrong" });
+        throw new AppError({
+          statusCode: 401,
+          message: "Email and Password was wrong",
+        });
       }
       const payload = {
         id: user.id,
@@ -78,17 +81,11 @@ export const loginController = async (
         ],
       });
     }
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
-export const registerController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const registerController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const data: RegisterSchema = req.body;
     const email: string = data.email;
     const name: string = data.name;
@@ -103,7 +100,5 @@ export const registerController = async (
     return res.status(201).json({
       message: "Register success",
     });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);

@@ -4,13 +4,11 @@ import type { productSchema } from "../shema/productSchema.js";
 import { prisma } from "../utils/prisma.js";
 import { uploadImage } from "../utils/uploadImage.js";
 import { supabase } from "../utils/supabase.js";
+import { AppError } from "../utils/appError.js";
+import { catchAsync } from "../utils/catchAsync.js";
 
-export const getProductsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const getProductsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { category } = req.query;
     const allProducts: Product[] = await prisma.product.findMany({
       where: category
@@ -22,17 +20,11 @@ export const getProductsController = async (
         : {},
     });
     return res.status(200).json({ message: "success", data: allProducts });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
-export const availableProductsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const availableProductsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { category } = req.query;
     const allProducts = await prisma.product.findMany({
       where: category
@@ -51,22 +43,19 @@ export const availableProductsController = async (
       },
     });
     return res.status(200).json({ message: "success", data: allProducts });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
-export const createProductController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const createProductController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const data: productSchema = req.body;
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ message: "Product image must be upload" });
+      throw new AppError({
+        statusCode: 400,
+        message: "Product image must be uploaded",
+      });
     }
     const publicUrl: string = await uploadImage(file);
 
@@ -93,36 +82,24 @@ export const createProductController = async (
     return res
       .status(200)
       .json({ message: "Create product success", data: product });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
-export const getProductController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const getProductController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { productId } = req.params;
     const product = await prisma.product.findUnique({
       where: { id: productId as string },
     });
     if (!product) {
-      return res.status(404).json({ message: "Product is not found" });
+      throw new AppError({ statusCode: 404, message: "Product is not found" });
     }
     return res.status(200).json({ message: "success", data: product });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
-export const updateProductController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const updateProductController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { productId } = req.params;
     const data: productSchema = req.body;
     const file = req.file;
@@ -154,23 +131,17 @@ export const updateProductController = async (
     return res
       .status(200)
       .json({ message: "Update product success", data: product });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);
 
-export const deleteProductController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+export const deleteProductController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { productId } = req.params;
     const product = await prisma.product.findUnique({
       where: { id: productId as string },
     });
     if (!product) {
-      return res.status(404).json({ message: "Product is not found" });
+      throw new AppError({ statusCode: 404, message: "Product is not found" });
     }
     await prisma.product.delete({ where: { id: product.id } });
 
@@ -180,7 +151,5 @@ export const deleteProductController = async (
       .remove([`products/${fileName}`]);
 
     return res.status(200).json({ message: "Delete product success" });
-  } catch (error) {
-    next(error);
-  }
-};
+  },
+);

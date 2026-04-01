@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { configuration } from "../config/config.js";
+import { AppError } from "../utils/appError.js";
 
 // Handler only status 404
 export const notFoundHandler = (
@@ -7,25 +8,30 @@ export const notFoundHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  res.status(404).json({ message: `${req.originalUrl} is Not Found` });
+  next(
+    new AppError({
+      statusCode: 404,
+      message: `${req.originalUrl} is Not Found`,
+    }),
+  );
 };
 
 // Global handler for all error (500, etc)
 export const errorMiddleware = (
-  err: any,
+  err: AppError,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-
+  let message: string = "Internal Server Error";
+  if (!err.isInternal || configuration.environment === "development") {
+    message = err.message;
+  }
   console.error(`[ERROR] ${req.method} ${req.path} >> ${message}`);
-
-  res.status(statusCode).json({
-    success: false,
-    status: statusCode,
+  console.error(err.stack);
+  return res.status(statusCode).json({
     message: message,
-    stack: configuration.environment === "development" ? err.stack : undefined,
+    errors: err.errors ?? undefined,
   });
 };

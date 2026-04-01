@@ -1,20 +1,23 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { configuration } from "../config/config.js";
+import { AppError } from "../utils/appError.js";
 
 // JWT Token Verification
 export const verifyToken = (
   req: Request,
   res: Response,
   next: NextFunction,
-): void => {
+) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-      res.status(401).json({ message: "Access denied. Token not found" });
-      return;
+      throw new AppError({
+        statusCode: 401,
+        message: "Access denied. Token not found",
+      });
     }
     const decoded = jwt.verify(token, configuration.jwt.secret) as {
       id: string;
@@ -23,7 +26,15 @@ export const verifyToken = (
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(403).json({ message: "Token is invalid or expired." });
+    if (error instanceof AppError) {
+      return next(error);
+    }
+    next(
+      new AppError({
+        statusCode: 403,
+        message: "Token is invalid or expired.",
+      }),
+    );
   }
 };
 
@@ -31,8 +42,7 @@ export const verifyToken = (
 export const authorizeRole = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user || !roles.includes(req.user.role)) {
-      res.status(403).json({ message: "Access denied" });
-      return;
+      return next(new AppError({ statusCode: 403, message: "Access denied" }));
     }
     next();
   };
