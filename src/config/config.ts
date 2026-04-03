@@ -17,4 +17,8 @@ export const configuration = {
     url: (process.env.SUPABASE_URL as string) || "",
     key: (process.env.SUPABASE_ANON_KEY as string) || "",
   },
+  midtrans: {
+    serverKey: process.env.MIDTRANS_SERVER_KEY || "",
+    clientKey: process.env.MIDTRANS_CLIENT_KEY || ""
+  }
 };
