@@ -1,11 +1,10 @@
-# Simple e-commerce
+# Full-stack e-commerce
 A robust full-stack e-commerce solution featuring a high-performance Express.js and a Flutter mobile interface. This project prioritizes data integrity, security, and clean architecture.
 
 🚀 Tech Stack
 - Backend: Node.js, Express.js, TypeScript.
 - Database & Storage: Supabase (PostgreSQL) & Supabase Storage for Image Assets.
 - Mobile: Flutter (Dart).
-- Web: React (will added soon)
 - Security: JWT with Access & Refresh Token mechanism.
 
 🏗️ Architectural Highlights
@@ -34,6 +33,8 @@ Developed using TypeScript, ensuring:
 | Admin         |/api/admin/products     | GET/POST     | Manage product.
 | Admin         |/api/admin/products/:id | PATCH/DELETE | Update/Remove product items.
 | Customer      |/api/products           | GET          | Fetch available items for customers.
+| Customer      |/api/orders             | GET          | Fetch history orders
+| Customer      |/api/orders/create      | POST         | Create order
 
 🏁 How to Run
 Backend:
