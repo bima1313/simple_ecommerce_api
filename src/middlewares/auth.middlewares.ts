@@ -31,7 +31,7 @@ export const verifyToken = (
     }
     next(
       new AppError({
-        statusCode: 403,
+        statusCode: 401,
         message: "Token is invalid or expired.",
       }),
     );
